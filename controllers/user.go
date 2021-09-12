@@ -10,21 +10,21 @@ import (
 	"net/http"
 )
 
-type UserRepo struct {
+type Repo struct {
 	Db *gorm.DB
 }
 
-func New() *UserRepo {
+func New() *Repo {
 	db := utils.InitDb()
 	err := db.AutoMigrate(&models.User{}, &models.FriendApply{})
 	if err != nil {
 		fmt.Printf("AutoMigrate failed : error=%v\n", err)
 	}
-	return &UserRepo{Db: db}
+	return &Repo{Db: db}
 }
 
 // CreateUser create user
-func (repository *UserRepo) CreateUser(c *gin.Context) {
+func (repository *Repo) CreateUser(c *gin.Context) {
 	var user models.User
 	c.BindJSON(&user)
 	err := models.CreateUser(repository.Db, &user)
@@ -36,7 +36,7 @@ func (repository *UserRepo) CreateUser(c *gin.Context) {
 }
 
 // GetUsers get users
-func (repository *UserRepo) GetUsers(c *gin.Context) {
+func (repository *Repo) GetUsers(c *gin.Context) {
 	var user []models.User
 	err := models.GetUsers(repository.Db, &user)
 	if err != nil {
@@ -47,7 +47,7 @@ func (repository *UserRepo) GetUsers(c *gin.Context) {
 }
 
 // GetUser get user by id
-func (repository *UserRepo) GetUser(c *gin.Context) {
+func (repository *Repo) GetUser(c *gin.Context) {
 	id, _ := c.Params.Get("id")
 	var user models.User
 	err := models.GetUser(repository.Db, &user, id)
@@ -64,7 +64,7 @@ func (repository *UserRepo) GetUser(c *gin.Context) {
 }
 
 // UpdateUser update user
-func (repository *UserRepo) UpdateUser(c *gin.Context) {
+func (repository *Repo) UpdateUser(c *gin.Context) {
 	var user models.User
 	id, _ := c.Params.Get("id")
 	err := models.GetUser(repository.Db, &user, id)
@@ -87,7 +87,7 @@ func (repository *UserRepo) UpdateUser(c *gin.Context) {
 }
 
 // DeleteUser delete user
-func (repository *UserRepo) DeleteUser(c *gin.Context) {
+func (repository *Repo) DeleteUser(c *gin.Context) {
 	var user models.User
 	id, _ := c.Params.Get("id")
 	err := models.DeleteUser(repository.Db, &user, id)

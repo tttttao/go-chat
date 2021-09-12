@@ -7,14 +7,14 @@ import (
 type User struct {
 	gorm.Model
 	ID          int
-	Name        string        `gorm:"type:string;size:100;not null;default:''"`
-	Email       string        `gorm:"type:string;size:100;not null;default:''"`
+	Name        string        `gorm:"unique;type:string;size:100;not null;default:''"`
+	Email       string        `gorm:"unique;type:string;size:100;not null;default:''"`
 	Password    string        `gorm:"not null;default:''"`
 	Avatar      string        `gorm:"not null;default:''"`
 	Nickname    string        `gorm:"type:string;size:100;not null;default:''"`
 	Friends     []*User       `gorm:"many2many:user_friends;"`
-	AppliesFrom []FriendApply `gorm:"foreignKey:FromID;references:ID"`
-	AppliesTo   []FriendApply `gorm:"foreignKey:ToID;references:ID"`
+	AppliesFrom []FriendApply `gorm:"foreignKey:FromID;"`
+	AppliesTo   []FriendApply `gorm:"foreignKey:ToID;"`
 }
 
 // CreateUser create a user
@@ -37,7 +37,7 @@ func GetUsers(db *gorm.DB, User *[]User) (err error) {
 
 // GetUser get user by id
 func GetUser(db *gorm.DB, User *User, id string) (err error) {
-	err = db.Where("id = ?", id).First(User).Error
+	err = db.Where("id = ?", id).Preload("AppliesFrom").First(User).Error
 	if err != nil {
 		return err
 	}

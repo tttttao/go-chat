@@ -10,12 +10,14 @@ import (
 func main() {
 	fmt.Println(os.Args)
 	r := gin.Default()
-	userRepo := controllers.New()
+	ctl := controllers.New()
 
-	r.POST("/users", userRepo.CreateUser)
-	r.GET("/users", userRepo.GetUsers)
-	r.GET("/users/:id", userRepo.GetUser)
-	r.PUT("/users/:id", userRepo.UpdateUser)
-	r.DELETE("/users/:id", userRepo.DeleteUser)
+	r.POST("/users", ctl.CreateUser)
+	r.GET("/users", ctl.GetUsers)
+	r.GET("/users/:id", ctl.GetUser)
+	r.PUT("/users/:id", ctl.UpdateUser)
+	r.DELETE("/users/:id", ctl.DeleteUser)
+
+	r.POST("/friend-applies", ctl.CreateFriendApply)
 	r.Run()
 }
