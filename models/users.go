@@ -9,7 +9,7 @@ type User struct {
 	ID          int
 	Name        string        `gorm:"unique;type:string;size:100;not null;default:''"`
 	Email       string        `gorm:"unique;type:string;size:100;not null;default:''"`
-	Password    string        `gorm:"not null;default:''"`
+	Password    []byte        `gorm:"not null;"`
 	Avatar      string        `gorm:"not null;default:''"`
 	Nickname    string        `gorm:"type:string;size:100;not null;default:''"`
 	Friends     []*User       `gorm:"many2many:user_friends;"`
@@ -36,8 +36,8 @@ func GetUsers(db *gorm.DB, User *[]User) (err error) {
 }
 
 // GetUser get user by id
-func GetUser(db *gorm.DB, User *User, id string) (err error) {
-	err = db.Where("id = ?", id).Preload("AppliesFrom").First(User).Error
+func GetUser(db *gorm.DB, User *User) (err error) {
+	err = db.Where(User).Preload("AppliesFrom").First(User).Error
 	if err != nil {
 		return err
 	}

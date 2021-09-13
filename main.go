@@ -12,6 +12,7 @@ func main() {
 	r := gin.Default()
 	ctl := controllers.New()
 
+	r.POST("/login", ctl.Login)
 	r.POST("/users", ctl.CreateUser)
 	r.GET("/users", ctl.GetUsers)
 	r.GET("/users/:id", ctl.GetUser)

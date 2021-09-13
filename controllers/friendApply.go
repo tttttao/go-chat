@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 	"goGoGo/models"
 	"net/http"
 )
@@ -15,5 +16,12 @@ func (repository *Repo) CreateFriendApply(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
-	c.JSON(http.StatusOK, apply)
+	apiRes := models.ApiFriendApply{}
+	if err := copier.Copy(&apiRes, &apply); err != nil {
+		panic(err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": apiRes,
+	})
 }

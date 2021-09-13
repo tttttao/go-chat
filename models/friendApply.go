@@ -10,10 +10,18 @@ type FriendApply struct {
 	gorm.Model
 	ID     int
 	State  int  `gorm:"notnull:default:0"`
-	FromID int  `gorm:"notnull" json:"from_id"`
-	ToID   int  `gorm:"notnull" json:"to_id"`
+	FromID int  `gorm:"notnull;uniqueIndex:idx_from_to" json:"from_id"`
+	ToID   int  `gorm:"notnull;uniqueIndex:idx_from_to" json:"to_id"`
 	From   User `gorm:"foreignKey:FromID"`
 	TO     User `gorm:"foreignKey:ToID"`
+}
+
+type ApiFriendApply struct {
+	gorm.Model
+	ID     int
+	State  int
+	FromID int
+	ToID   int
 }
 
 // CreateFriendApply create a friend apply
