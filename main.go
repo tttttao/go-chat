@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"goGoGo/controllers"
+	"goGoGo/middlewares"
 	"os"
 )
 
@@ -14,11 +15,17 @@ func main() {
 
 	r.POST("/login", ctl.Login)
 	r.POST("/users", ctl.CreateUser)
-	r.GET("/users", ctl.GetUsers)
-	r.GET("/users/:id", ctl.GetUser)
-	r.PUT("/users/:id", ctl.UpdateUser)
-	r.DELETE("/users/:id", ctl.DeleteUser)
 
-	r.POST("/friend-applies", ctl.CreateFriendApply)
+	authJWT := r.Group("/", middlewares.AuthJWT)
+	{
+
+		authJWT.GET("/users", ctl.GetUsers)
+		authJWT.GET("/users/:id", ctl.GetUser)
+		authJWT.PUT("/users/:id", ctl.UpdateUser)
+		authJWT.DELETE("/users/:id", ctl.DeleteUser)
+
+		authJWT.POST("/friend-applies", ctl.CreateFriendApply)
+	}
+
 	r.Run()
 }
